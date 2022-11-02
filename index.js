@@ -41,7 +41,7 @@ const capture = async (dirHandle, fileName) => {
         const captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
         video.srcObject = captureStream
         context.drawImage(video, 0, 0)
-        const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
+        const frame = canvas.toBlob((blob) => { /* … */ }, 'image/jpeg', 1)
         //captureStream.getTracks().forEach(track => track.stop())
         imgFile = await createFileHandle(fileName, dirHandle)
         writeContentToFile(imgFile, frame)
