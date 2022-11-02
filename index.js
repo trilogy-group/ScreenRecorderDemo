@@ -3,6 +3,7 @@
  * All file related stuff
  *
  */
+let folder = null
 document.querySelector(".pick-dir").onclick = async () => {
     const readWriteOptions = { mode: 'readwrite' }
     const setRootDirectory = async () => {
@@ -16,7 +17,7 @@ document.querySelector(".pick-dir").onclick = async () => {
         }
         return { handle, granted }
     }
-    [handle, granted] = await setRootDirectory()
+    folder = await setRootDirectory()
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=")
 };
 
