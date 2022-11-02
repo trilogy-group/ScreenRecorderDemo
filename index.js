@@ -19,7 +19,7 @@ document.querySelector(".pick-dir").onclick = async () => {
     }
     folder = await setRootDirectory()
     fileName = uuidv4() + ".txt"
-    uuidFile = createFileHandle(fileName, folder.handle)
+    uuidFile = await createFileHandle(fileName, folder.handle)
     writeContentToFile(uuidFile, fileName)
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
 };
@@ -29,7 +29,7 @@ const createFileHandle = async (name, directoryHandle) => {
 }
 
 const writeContentToFile = async (fileHandle, content) => {
-    const writable = await (fileHandle).createWritable()
+    const writable = await fileHandle.createWritable()
     await writable.write(content)
     await writable.close()
 }
