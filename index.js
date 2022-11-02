@@ -19,7 +19,7 @@ document.querySelector(".pick-dir").onclick = async () => {
     }
     folder = await setRootDirectory()
     fileName = uuidv4() + ".txt"
-    uuidFile = createFileHandle(fileName, folder)
+    uuidFile = createFileHandle(fileName, folder.handle)
     writeContentToFile(uuidFile, fileName)
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
 };
