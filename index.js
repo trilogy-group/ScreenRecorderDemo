@@ -51,7 +51,7 @@ const capture = async (dirHandle, fileName) => {
 }
 
 document.querySelector(".scrshot").onclick = async () => {
-    const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
+    const frame = canvas.toBlob((blob) => { /* … */ }, 'image/jpeg', 1)
     const date = new Date
     const imgName = `${date.getUTCHours()}-${date.getUTCMinutes()}-${date.getUTCSeconds()}.jpg`
     imgFile = await createFileHandle(imgName, folder.handle)
