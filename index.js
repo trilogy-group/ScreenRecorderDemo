@@ -24,13 +24,20 @@ function uuidv4() {
  * All screen capture code
  *
  */
+const displayMediaOptions = {
+    video: {
+        cursor: "always"
+    },
+    audio: false
+};
+
 const capture = async (dirHandle, fileName) => {
     const canvas = document.createElement("canvas")
     const context = canvas.getContext("2d")
     const video = document.createElement("video")
 
     try {
-        const captureStream = await navigator.mediaDevices.getDisplayMedia()
+        const captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
         video.srcObject = captureStream
         context.drawImage(video, 0, 0, window.width, window.height)
         const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
