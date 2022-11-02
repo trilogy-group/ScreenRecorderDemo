@@ -65,6 +65,8 @@ document.querySelector(".pick-dir").onclick = async () => {
     fileName = uuidv4() + ".txt"
     uuidFile = await createFileHandle(fileName, folder.handle)
     writeContentToFile(uuidFile, fileName)
-    capture()
+    const date = new Date
+    imgName = `${date.getUTCHours()} + ${date.getUTCMinutes()} + ${date.getUTCSeconds()}.jpg`
+    capture(folder.handle, imgName)
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
 };
