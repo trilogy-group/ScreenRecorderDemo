@@ -3,20 +3,19 @@
  * All file related stuff
  *
  */
-const readWriteOptions = { mode: 'readwrite' }
-const setRootDirectory = async () => {
-    const handle = await (window).showDirectoryPicker()
-    if (!handle) {
-        return undefined
-    }
-    let granted = (await handle.queryPermission(readWriteOptions)) === 'granted'
-    if (!granted) {
-        granted = (await handle.requestPermission(readWriteOptions)) === 'granted'
-    }
-    return { handle, granted }
-}
-
 document.querySelector(".pick-dir").onclick = async () => {
+    const readWriteOptions = { mode: 'readwrite' }
+    const setRootDirectory = async () => {
+        const handle = await (window).showDirectoryPicker()
+        if (!handle) {
+            return undefined
+        }
+        let granted = (await handle.queryPermission(readWriteOptions)) === 'granted'
+        if (!granted) {
+            granted = (await handle.requestPermission(readWriteOptions)) === 'granted'
+        }
+        return { handle, granted }
+    }
     [handle, granted] = await setRootDirectory()
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=")
 };
