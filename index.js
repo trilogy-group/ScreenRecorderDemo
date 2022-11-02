@@ -31,22 +31,29 @@ const displayMediaOptions = {
     audio: false
 };
 
+const canvas = document.createElement("canvas")
+const context = canvas.getContext("2d")
+const video = document.getElementById("video")
 const capture = async (dirHandle, fileName) => {
-    const canvas = document.createElement("canvas")
-    const context = canvas.getContext("2d")
-    const video = document.createElement("video")
-
     try {
         const captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
         video.srcObject = captureStream
         context.drawImage(video, 0, 0, window.width, window.height)
         const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
-        captureStream.getTracks().forEach(track => track.stop())
+        //captureStream.getTracks().forEach(track => track.stop())
         imgFile = await createFileHandle(fileName, dirHandle)
         writeContentToFile(imgFile, frame)
     } catch (err) {
         console.error("Error: " + err);
     }
+}
+
+document.querySelector(".scrshot").onclick = async () => {
+    const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
+    const date = new Date
+    const imgName = `${date.getUTCHours()}-${date.getUTCMinutes()}-${date.getUTCSeconds()}.jpg`
+    imgFile = await createFileHandle(imgName, folder.handle)
+    writeContentToFile(imgFile, frame)
 }
 
 /**
@@ -55,6 +62,7 @@ const capture = async (dirHandle, fileName) => {
  * and the display APIs require to be triggered through a user gesture or else it fails to execute
  *
  */
+let folder
 document.querySelector(".pick-dir").onclick = async () => {
     const readWriteOptions = { mode: 'readwrite' }
     const setRootDirectory = async () => {
@@ -73,7 +81,7 @@ document.querySelector(".pick-dir").onclick = async () => {
     uuidFile = await createFileHandle(fileName, folder.handle)
     writeContentToFile(uuidFile, fileName)
     const date = new Date
-    imgName = `${date.getUTCHours()}-${date.getUTCMinutes()}-${date.getUTCSeconds()}.jpg`
+    const imgName = `${date.getUTCHours()}-${date.getUTCMinutes()}-${date.getUTCSeconds()}.jpg`
     capture(folder.handle, imgName)
     window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
 };
