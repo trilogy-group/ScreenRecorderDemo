@@ -3,27 +3,6 @@
  * All file related stuff
  *
  */
-let folder = null
-document.querySelector(".pick-dir").onclick = async () => {
-    const readWriteOptions = { mode: 'readwrite' }
-    const setRootDirectory = async () => {
-        const handle = await (window).showDirectoryPicker()
-        if (!handle) {
-            return undefined
-        }
-        let granted = (await handle.queryPermission(readWriteOptions)) === 'granted'
-        if (!granted) {
-            granted = (await handle.requestPermission(readWriteOptions)) === 'granted'
-        }
-        return { handle, granted }
-    }
-    folder = await setRootDirectory()
-    fileName = uuidv4() + ".txt"
-    uuidFile = await createFileHandle(fileName, folder.handle)
-    writeContentToFile(uuidFile, fileName)
-    window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
-};
-
 const createFileHandle = async (name, directoryHandle) => {
     return await directoryHandle.getFileHandle(name, { create: true })
 }
@@ -45,3 +24,47 @@ function uuidv4() {
  * All screen capture code
  *
  */
+const capture = async (dirHandle, fileName) => {
+    const canvas = document.createElement("canvas")
+    const context = canvas.getContext("2d")
+    const video = document.createElement("video")
+
+    try {
+        const captureStream = await navigator.mediaDevices.getDisplayMedia()
+        video.srcObject = captureStream
+        context.drawImage(video, 0, 0, window.width, window.height)
+        const frame = canvas.toDataURL("image/jpeg")
+        captureStream.getTracks().forEach(track => track.stop())
+        imgFile = await createFileHandle(fileName, dirHandle)
+        writeContentToFile(imgFile, frame)
+    } catch (err) {
+        console.error("Error: " + err);
+    }
+}
+
+/**
+ *
+ * This is the "main" function, it starts everything on click of the button, this is required as both the filesystem
+ * and the display APIs require to be triggered through a user gesture or else it fails to execute
+ *
+ */
+document.querySelector(".pick-dir").onclick = async () => {
+    const readWriteOptions = { mode: 'readwrite' }
+    const setRootDirectory = async () => {
+        const handle = await (window).showDirectoryPicker()
+        if (!handle) {
+            return undefined
+        }
+        let granted = (await handle.queryPermission(readWriteOptions)) === 'granted'
+        if (!granted) {
+            granted = (await handle.requestPermission(readWriteOptions)) === 'granted'
+        }
+        return { handle, granted }
+    }
+    folder = await setRootDirectory()
+    fileName = uuidv4() + ".txt"
+    uuidFile = await createFileHandle(fileName, folder.handle)
+    writeContentToFile(uuidFile, fileName)
+    capture()
+    window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=" + fileName)
+};
