@@ -31,14 +31,16 @@ const displayMediaOptions = {
     audio: false
 };
 
-const canvas = document.createElement("canvas")
-const context = canvas.getContext("2d")
 const video = document.getElementById("video")
+const canvas = document.createElement("canvas")
+canvas.width = video.videoWidth
+canvas.height = video.videoHeight
+const context = canvas.getContext("2d")
 const capture = async (dirHandle, fileName) => {
     try {
         const captureStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
         video.srcObject = captureStream
-        context.drawImage(video, 0, 0, window.width, window.height)
+        context.drawImage(video, 0, 0)
         const frame = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg"))
         //captureStream.getTracks().forEach(track => track.stop())
         imgFile = await createFileHandle(fileName, dirHandle)
