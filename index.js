@@ -17,7 +17,7 @@ document.querySelector(".pick-dir").onclick = async () => {
         }
         return { handle, granted }
     }
-    window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=")
+    //window.open("https://trilogy-group.github.io/ScreenRecorderDemo/tracker/index.html?folder=")
 };
 
 const createFileHandle = async (name, directoryHandle) => {
